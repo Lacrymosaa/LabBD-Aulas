@@ -1,0 +1,6 @@
+from tabela1 inner join tabela2
+on chaveprimaria = chaveestrangeira -> que relaciona ambas
+
+create view nomeV (nome dos parametros editados que serão puxados no select) AS
+select NomeAtbTabela
+
