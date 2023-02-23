@@ -4,3 +4,4 @@ on chaveprimaria = chaveestrangeira -> que relaciona ambas
 create view nomeV (nome dos parametros editados que serão puxados no select) AS
 select NomeAtbTabela
 
+Edit > Preferences > MySQL > Default > 5.7
