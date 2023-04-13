@@ -1,7 +1,138 @@
-from tabela1 inner join tabela2
-on chaveprimaria = chaveestrangeira -> que relaciona ambas
-
-create view nomeV (nome dos parametros editados que serão puxados no select) AS
-select NomeAtbTabela
-
 Edit > Preferences > MySQL > Default > 5.7
+
+view de unica tabela:
+create view 'NomeView' (parametros)
+as 
+ select parametros from 'NomeTable';
+
+view de multiplas tabelas:
+create view 'NomeView' (parametros)
+as
+	SELECT usuarios.Nome, pedidos.ID_do_pedido, pedidos.Data_do_pedido
+	FROM usuarios
+	INNER JOIN pedidos
+	ON usuarios.ID = pedidos.ID_do_usuario;
+
+Essa instrução SQL combina as informações da tabela de usuários e pedidos com base no ID do usuário e seleciona apenas as colunas Nome, ID do pedido e Data do pedido. O resultado será uma tabela que mostra o nome do usuário e a data e ID do pedido relacionados a esse usuário.
+
+
+como usar declare: -> serve para declarar variaveis novas a se utilizar
+declare 'NomeVar' 'TipoVar';
+set 'NomeVar' = 'valor';
+
+outra forma de atribuir valor é fazer essa variavel receber outra
+
+select 'NomeLinha'
+into 'NomeVar'
+from 'NomeTable'
+
+No from vc define da onde a informação vem, no select vc escolhe a linha e no into vc define para onde o valor é atribuido
+
+
+decisão e repetição:
+if (condição) then
+	comandos
+	elseif (condição) then
+	comandos
+	else
+	comandos
+end if;
+
+while (condição) do
+	comandos
+end while;
+
+
+Como fazer uma trigger e o que é:
+Gatilho de ação que executa ações antes ou depois de algo ocorrer (insert alter ou delete)
+elas são definidas entre before | after
+
+para referenciar atribudos na trigger é necessario utilizar
+OLD.atr: valor atual (update e delete)
+NEW.atr: Novo valor (insert e update)
+
+Para criar a trigger:
+create trigger 'NomeTrigger' tempo//before ou after// ação ON 'NomeTable'
+for each row
+begin
+	comandos
+end;
+
+
+EXEMPLO INSERT
+create trigger AtualizaAluno after insert on alunos_turma
+for each row
+begin
+	update aluno -> atualiza a tabela
+	set nota_atual = null -> coloca a variavel em nulo
+	where codigo = new.codigo_aluno; -> localiza a nova variavel por conta do new.
+
+	update turma
+	set qtd_alnos = qtd_alunos + 1
+	where numero = new.numero_tur;
+end;
+
+EXEMPLO ALTER
+create trigger AtualizaAluno after update on alunos_turma
+for each row
+begin
+	update aluno -> atualiza a tabela
+	set nota_atual = new.nota -> coloca a variavel em nulo
+	where codigo = new.codigo_aluno; -> localiza a nova variavel por conta do new.
+end;
+
+USASSE OLD EM CASOS DE DELETE
+
+
+
+FUNÇÕES EM MYSQL -> PROCEDURE
+
+create procedure NomeProcedure (in Param1 TipoDado, out Param2 TipoDado) -> in é o que entra em out o que sai
+begin
+	comandos
+end;
+
+
+EXECUTAR
+call Procedure ("valor", @variavel)
+
+SELECT @variavel;
+
+
+EXEMPLO PROCEDURE
+create procedure MaiorNota(in codigocur int, out maior float)
+begin
+	select max(at.nota)
+	into maior -> insere na variavel criada na procedure
+	from turma t
+	inner join alunos_turma at on t.numero = at.numero_tur
+	where t.codigo_cur = codigocur;
+end;
+
+
+
+CURSOR ->  cursor é um objeto que permite percorrer um conjunto de resultados retornados por uma consulta SELECT
+DECLARE cursor_usuario CURSOR FOR SELECT Nome FROM usuarios;
+
+OPEN cursor_usuario;
+
+WHILE (TRUE) DO
+  FETCH cursor_usuario INTO nome_usuario;
+  IF done THEN
+    LEAVE loop_usuario;
+  END IF;
+  SELECT nome_usuario;
+END WHILE;
+
+CLOSE cursor_usuario;
+
+
+
+INDEX
+create index NomeIndice on NomeTable (var1, var2);
+
+CREATE INDEX idx_nome ON tabela_exemplo (nome);
+Neste exemplo, você está criando um índice chamado "idx_nome" na tabela "tabela_exemplo" com base na coluna "nome". Isso significa que o banco de dados criará uma estrutura de índice que armazena as informações da coluna "nome" da tabela "tabela_exemplo", para que as consultas que usam essa coluna possam ser executadas com mais eficiência.
+No entanto, é importante lembrar que a criação de índices pode ter um impacto negativo na performance do banco de dados em algumas situações, como em tabelas com poucas linhas ou em colunas que são raramente usadas em consultas. Portanto, é sempre importante avaliar cuidadosamente se a criação de um índice é realmente necessário em cada caso.
+
+
