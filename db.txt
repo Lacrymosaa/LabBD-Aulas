@@ -1,0 +1,21 @@
+use Restaurante;
+db.createCollection('prato'); 
+db.createCollection('ingrediente');
+db.ingrediente.insertOne(
+	{"nome":"arroz",
+	 "marca":"São João",
+	 "quantidade_em_estoque_kg": 100,
+	 "fornecedor": "João da Silva Marking"
+	});
+db.prato.insertOne(
+	{"nome": "Arroz Doce",
+	 "preco": 40.00,
+	 "quantidade_em_g": 300,
+	 "cozinheiro":{
+	 	"nome": "Carlos da Silva",
+		"turno": "noturno"
+	 },
+	 "ingredientes": 
+	});
+
+
